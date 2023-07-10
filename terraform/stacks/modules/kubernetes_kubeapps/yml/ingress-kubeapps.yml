@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kubeapps
+  namespace: kubeapps
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: service.schoolofrock.edu
+spec:
+  tls:
+  - hosts:
+    - "kubeapps.service.schoolofrock.edu"
+    secretName: service.schoolofrock.edu-tls
+  rules:
+  - host: kubeapps.service.schoolofrock.edu
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: kubeapps
+            port:
+              number: 80
